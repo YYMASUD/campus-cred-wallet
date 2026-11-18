@@ -45,3 +45,10 @@ logs/
 # prompt file containing tokens (local only)
 propmt.txt.txt
 prompt.txt
+
+*.log
+packages/sdk/tc.txt
+packages/zk-circuits/.ptau/
+packages/zk-circuits/.tools/
+packages/zk-circuits/build/
+

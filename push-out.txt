@@ -1,2 +1,0 @@
-To https://github.com/YYMASUD/campus-cred-wallet.git
-   3c4db54..6fd4631  main -> main
