@@ -184,6 +184,9 @@ importers:
 
   apps/issuer-portal:
     dependencies:
+      '@campus-cred/sdk':
+        specifier: workspace:*
+        version: link:../../packages/sdk
       '@campus-cred/types':
         specifier: workspace:*
         version: link:../../packages/types

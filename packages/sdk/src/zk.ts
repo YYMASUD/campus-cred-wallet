@@ -17,8 +17,11 @@ export interface Groth16Output {
   publicSignals: string[];
 }
 
-/** Lazily resolve snarkjs so the SDK stays browser-friendly.
- *  Typed as `any` because snarkjs ships no TS types. */
+/**
+ * Lazily resolve snarkjs so the SDK stays browser-friendly.
+ * snarkjs is an OPTIONAL peer dependency: the wallet bundles it when ZK proving
+ * is enabled; servers that only verify use the exported verification key.
+ */
 type Snarkjs = {
   groth16: {
     fullProve: (input: Record<string, unknown>, wasm: string, zkey: string) => Promise<{ proof: any; publicSignals: string[] }>;
@@ -26,10 +29,20 @@ type Snarkjs = {
   };
 };
 
+let snarkjsModule: Snarkjs | null = null;
+
+export function registerSnarkjs(mod: Snarkjs): void {
+  snarkjsModule = mod;
+}
+
 async function snarkjs(): Promise<Snarkjs> {
-  // @ts-expect-error snarkjs is a peer dependency with no type declarations
-  const mod = await import("snarkjs");
-  return (mod.default ?? mod) as Snarkjs;
+  if (snarkjsModule) return snarkjsModule;
+  // The specifier is resolved by the host app (Vite/Rollup) — if the bundler has
+  // no snarkjs, the user must call registerSnarkjs() with a bundled instance.
+  const name = "snarkjs";
+  const mod: any = await import(/* @vite-ignore */ name);
+  snarkjsModule = (mod.default ?? mod) as Snarkjs;
+  return snarkjsModule;
 }
 
 /** Generate a Groth16 proof. */

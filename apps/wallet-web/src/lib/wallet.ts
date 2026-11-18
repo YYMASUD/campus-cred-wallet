@@ -52,11 +52,11 @@ export async function unlockPrivateKey(pin: string): Promise<Uint8Array> {
 // ---- PBKDF2 -> AES-GCM ----
 
 async function deriveKey(pin: string, salt: Uint8Array): Promise<CryptoKey> {
-  const baseKey = await crypto.subtle.importKey("raw", new TextEncoder().encode(pin), "PBKDF2", false, [
+  const baseKey = await crypto.subtle.importKey("raw", buf(new TextEncoder().encode(pin)), "PBKDF2", false, [
     "deriveKey",
   ]);
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", salt, iterations: 200_000, hash: "SHA-256" },
+    { name: "PBKDF2", salt: buf(salt), iterations: 200_000, hash: "SHA-256" },
     baseKey,
     { name: "AES-GCM", length: 256 },
     false,
@@ -64,11 +64,20 @@ async function deriveKey(pin: string, salt: Uint8Array): Promise<CryptoKey> {
   );
 }
 
+/** Copy into a plain ArrayBuffer (WebCrypto's BufferSource typing is strict). */
+function buf(u8: Uint8Array): ArrayBuffer {
+  const out = new ArrayBuffer(u8.byteLength);
+  new Uint8Array(out).set(u8);
+  return out;
+}
+
 async function encryptKey(privateKey: Uint8Array, pin: string): Promise<string> {
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const nonce = crypto.getRandomValues(new Uint8Array(12));
   const key = await deriveKey(pin, salt);
-  const cipher = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv: nonce }, key, privateKey));
+  const cipher = new Uint8Array(
+    await crypto.subtle.encrypt({ name: "AES-GCM", iv: buf(nonce) }, key, buf(privateKey))
+  );
   const packed = new Uint8Array(salt.length + nonce.length + cipher.length);
   packed.set(salt, 0);
   packed.set(nonce, salt.length);
@@ -82,7 +91,7 @@ async function decryptKey(packedB64: string, pin: string): Promise<Uint8Array> {
   const nonce = packed.slice(16, 28);
   const cipher = packed.slice(28);
   const key = await deriveKey(pin, salt);
-  return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: nonce }, key, cipher));
+  return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf(nonce) }, key, buf(cipher)));
 }
 
 // ---- credentials ----

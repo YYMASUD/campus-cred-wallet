@@ -8,7 +8,11 @@ const dec = new TextDecoder();
 export function bytesToBase64url(bytes: Uint8Array): string {
   let bin = "";
   for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-  const b64 = typeof btoa === "function" ? btoa(bin) : Buffer.from(bytes).toString("base64");
+  const b64 =
+    typeof btoa === "function"
+      ? btoa(bin)
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (globalThis as any).Buffer.from(bytes).toString("base64");
   return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
@@ -20,7 +24,8 @@ export function base64urlToBytes(s: string): Uint8Array {
     for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
     return out;
   }
-  return new Uint8Array(Buffer.from(b64, "base64"));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return new Uint8Array((globalThis as any).Buffer.from(b64, "base64"));
 }
 
 export function utf8ToBase64url(s: string): string {
