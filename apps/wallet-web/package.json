@@ -2,10 +2,5 @@
     "private":  true,
     "name":  "@campus-cred/wallet-web",
     "version":  "1.0.0",
-    "scripts":  {
-                    "lint":  "echo ok",
-                    "build":  "echo placeholder",
-                    "typecheck":  "echo ok",
-                    "test":  "echo placeholder"
-                }
+    "type":  "module"
 }

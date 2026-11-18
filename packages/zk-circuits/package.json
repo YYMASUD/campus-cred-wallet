@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/compile.mjs",
+    "setup": "node scripts/setup.mjs",
     "test": "node --test test/*.test.mjs",
     "lint": "echo zk-lint-ok",
-    "typecheck": "echo zk-typecheck-ok",
-    "setup": "node scripts/setup.mjs"
+    "typecheck": "echo zk-typecheck-ok"
   },
   "dependencies": {
     "circomlib": "^2.0.5",
