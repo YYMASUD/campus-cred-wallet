@@ -1,6 +1,31 @@
 {
-    "private":  true,
-    "name":  "@campus-cred/verifier-portal",
-    "version":  "1.0.0",
-    "type":  "module"
+  "name": "@campus-cred/verifier-portal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5174",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 5174",
+    "test": "echo verifier-portal-tests",
+    "lint": "echo verifier-portal-lint-ok",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@campus-cred/types": "workspace:*",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
 }

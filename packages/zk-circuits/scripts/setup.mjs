@@ -40,14 +40,12 @@ function ensurePtau() {
   // Fallback: generate a DEV-ONLY powers-of-tau locally with snarkjs.
   // Our largest circuit (nonRevocation) needs ~2^12 constraints.
   fs.rmSync(PTau, { force: true });
-  const tau0 = path.join(path.dirname(PTau), "powersoftau_0000.ptau");
-  const tau1 = path.join(path.dirname(PTau), "powersoftau_0001.ptau");
-  console.warn("generating local dev ptau (power 12) — this can take a couple of minutes ...");
-  run(["powersoftau", "new", "bn128", "12", tau0]);
-  run(["powersoftau", "contribute", tau0, tau1, "--name=campus-cred-dev", "-e=dev-only-no-security"]);
-  run(["powersoftau", "prepare", "phase2", tau1, PTau]);
-  fs.rmSync(tau0, { force: true });
-  fs.rmSync(tau1, { force: true });
+  const tau0 = path.join(path.dirname(PTau), "t0.ptau");
+  const tau1 = path.join(path.dirname(PTau), "t1.ptau");
+  console.warn("generating local dev ptau (power 12) — this can take several minutes ...");
+  run(["--", "powersoftau", "new", "bn128", "12", tau0].slice(1));
+  run(["--", "powersoftau", "contribute", tau0, tau1, "--name=campus-cred-dev", "--entropy=campus-cred-dev-entropy"].slice(1));
+  run(["--", "powersoftau", "prepare", "phase2", tau1, PTau].slice(1));
   return PTau;
 }
 

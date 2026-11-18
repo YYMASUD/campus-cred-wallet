@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  # Local EVM dev chain (Anvil equivalent via hardhat node for our contracts)
+  chain:
+    image: node:22-alpine
+    working_dir: /work
+    command: sh -c "npx --yes hardhat@2 node --hostname 0.0.0.0"
+    ports:
+      - "8545:8545"
+    environment:
+      - HARDHAT_DISABLE_TELEMETRY=true
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MULTIPLE_DATABASES: issuer,verifier,indexer
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init-multi-dbs.sh:/docker-entrypoint-initdb.d/init-multi-dbs.sh
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  ipfs:
+    image: ipfs/kubo:v0.29.0
+    ports:
+      - "4001:4001"
+      - "5001:5001" # API
+      - "8080:8080" # Gateway
+    volumes:
+      - ipfsdata:/data/ipfs
+
+volumes:
+  pgdata:
+  ipfsdata:

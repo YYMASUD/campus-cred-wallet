@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: ageOver: proves age >= 18 without revealing birthdate
+ok 1 - ageOver: proves age >= 18 without revealing birthdate
+  ---
+  duration_ms: 681.1914
+  type: 'test'
+  ...
+# Subtest: ageOver: underage holder yields valid = 0
+ok 2 - ageOver: underage holder yields valid = 0
+  ---
+  duration_ms: 201.2519
+  type: 'test'
+  ...
+# Subtest: attributeEquals: proves hidden attribute equals the public value
+not ok 3 - attributeEquals: proves hidden attribute equals the public value
+  ---
+  duration_ms: 1948.5772
+  type: 'test'
+  location: 'C:\\Users\\Mass\\Desktop\\campus-cred-wallet\\packages\\zk-circuits\\test\\proofs.test.mjs:57:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    expected (public)
+    
+    '1' !== '42'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '42'
+  actual: '1'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Mass/Desktop/campus-cred-wallet/packages/zk-circuits/test/proofs.test.mjs:72:10)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
