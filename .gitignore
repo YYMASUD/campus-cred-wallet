@@ -52,3 +52,7 @@ packages/zk-circuits/.ptau/
 packages/zk-circuits/.tools/
 packages/zk-circuits/build/
 
+
+*-out.txt
+packages/*/t2.txt
+
