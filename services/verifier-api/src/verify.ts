@@ -2,7 +2,7 @@ import {
   verifySdJwt,
   verifyKeyBindingJwt,
   verifyGroth16,
-  sdJwtHash,
+  credentialFingerprint,
 } from "@campus-cred/sdk";
 import type { VerificationOutcome, VerifiablePresentation } from "@campus-cred/types";
 
@@ -64,11 +64,12 @@ export async function verifyPresentation(opts: {
     if (!ok) return { status: "INVALID", presentationId: request.id, reason: `zk proof ${zkp.circuitId} failed` };
   }
 
-  // 4. revocation (the hash covers issuer + all claims of the ORIGINAL credential)
-  //    The wallet proves knowledge of the hash binding inside its ZK membership
-  //    proof; for the demo we additionally re-hash the disclosed set.
-  const credentialHash = sdJwtHash(sdJwtWithoutKb);
-  if (await opts.isRevoked(credentialHash)) {
+  // 4. revocation
+  //    Fingerprint the ISSUER JWT only: it is identical across every
+  //    presentation of this credential (disclosures are appended, not mutated),
+  //    so the issuer's revocation record and this check always agree.
+  const fingerprint = credentialFingerprint(sdJwtWithoutKb);
+  if (await opts.isRevoked(fingerprint)) {
     return { status: "REVOKED", presentationId: request.id, reason: "credential revoked" };
   }
 

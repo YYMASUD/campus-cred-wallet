@@ -30,6 +30,10 @@ export async function migrate() {
       status_index BIGINT NOT NULL,
       revoked_at TIMESTAMPTZ DEFAULT now()
     );
+    CREATE TABLE IF NOT EXISTS status_cursor (
+      issuer_did TEXT PRIMARY KEY,
+      next_index BIGINT NOT NULL DEFAULT 0
+    );
     CREATE INDEX IF NOT EXISTS idx_offers_holder ON credential_offers(holder_did);
   `);
 }

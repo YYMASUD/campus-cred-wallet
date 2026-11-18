@@ -42,19 +42,38 @@ api.post("/api/credentials/batch", async (req, res) => {
 });
 
 api.post("/api/credentials/revoke", async (req, res) => {
-  const { credentialHash } = z.object({ credentialHash: z.string() }).parse(req.body);
-  await pool.query(
-    "INSERT INTO revoked(credential_hash, status_index) VALUES($1, COALESCE((SELECT MAX(status_index)+1 FROM revoked),0)) ON CONFLICT DO NOTHING",
+  const { credentialHash } = z.object({ credentialHash: z.string().min(8) }).parse(req.body);
+
+  // Revoke the existing record (keeping its allocated status index), or insert
+  // one if the credential was issued by an older run.
+  const r = await pool.query(
+    `INSERT INTO revoked(credential_hash, status_index)
+     VALUES($1, (COALESCE((SELECT MAX(status_index)+1 FROM revoked), 0)))
+     ON CONFLICT(credential_hash) DO UPDATE SET revoked_at = COALESCE(revoked.revoked_at, now())
+     RETURNING status_index, revoked_at`,
     [credentialHash]
   );
-  res.json({ ok: true, credentialHash });
+
+  const { status_index, revoked_at } = r.rows[0];
+  res.json({ ok: true, credentialHash, statusIndex: Number(status_index), revokedAt: revoked_at });
 });
 
+/**
+ * Revocation lookup used by the verifier service.
+ * Returns only a boolean + index — never claim values.
+ */
 api.get("/api/credentials/:hash/status", async (req, res) => {
-  const r = await pool.query("SELECT status_index, revoked_at IS NOT NULL AS revoked FROM revoked WHERE credential_hash=$1", [
-    req.params.hash,
-  ]);
-  res.json(r.rows[0] ?? { status_index: null, revoked: false });
+  const r = await pool.query(
+    "SELECT status_index, revoked_at FROM revoked WHERE credential_hash=$1",
+    [req.params.hash]
+  );
+  if (r.rowCount === 0) {
+    return res.json({ revoked: false, statusIndex: null });
+  }
+  res.json({
+    revoked: r.rows[0].revoked_at !== null,
+    statusIndex: Number(r.rows[0].status_index),
+  });
 });
 
 api.get("/api/offer/:offerId", async (req, res) => {

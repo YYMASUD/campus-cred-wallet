@@ -158,4 +158,20 @@ export function sdJwtHash(sdJwtWithoutKb: string): string {
   return sha256B64url(sdJwtWithoutKb);
 }
 
+/**
+ * Stable per-credential fingerprint, used as the revocation key.
+ *
+ * Hashes ONLY the issuer JWT (the first `~`-separated part of an SD-JWT). That
+ * segment is byte-identical across every presentation of the same credential —
+ * disclosures are appended, never mutated — so issuer and verifier always derive
+ * the same value no matter which claims were disclosed.
+ *
+ * Note: this identifier is stable per credential, which is the documented
+ * linkability trade-off (see docs/SECURITY.md). It carries no personal data.
+ */
+export function credentialFingerprint(sdJwtOrJwt: string): string {
+  const issuerJwt = sdJwtOrJwt.split("~")[0];
+  return credentialHash(issuerJwt);
+}
+
 export { base64urlToBytes };

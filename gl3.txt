@@ -1,0 +1,86 @@
+ZK circuits (compile)	Compile circuits	﻿2026-11-18T07:46:35.8803548Z ##[group]Run pnpm build
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.8803832Z ^[[36;1mpnpm build^[[0m
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.8860508Z shell: /usr/bin/bash -e {0}
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.8860792Z env:
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.8861049Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.8861351Z ##[endgroup]
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9134100Z $ node scripts/compile.mjs
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9373973Z Using circom: /usr/local/bin/circom
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9375548Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9375915Z === compiling ageOver ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9481180Z ^[[32mtemplate instances^[[0m: 3
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9490877Z non-linear constraints: 33
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9491421Z linear constraints: 0
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9491659Z public inputs: 2
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9491886Z private inputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9492082Z public outputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9492267Z wires: 36
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9492430Z labels: 42
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9492846Z ^[[32mWritten successfully:^[[0m build/ageOver/ageOver.r1cs
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9493288Z ^[[32mWritten successfully:^[[0m build/ageOver/ageOver.sym
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9558578Z ^[[32mWritten successfully:^[[0m build/ageOver/ageOver_js/ageOver.wasm
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9558956Z ^[[32mEverything went okay^[[0m
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9571384Z ok: ageOver
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9586222Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:35.9586538Z === compiling membership ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.0531152Z ^[[32mtemplate instances^[[0m: 72
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1731647Z non-linear constraints: 1944
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1732358Z linear constraints: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1732563Z public inputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1732871Z private inputs: 17
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1733062Z public outputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1733243Z wires: 1955
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1733410Z labels: 6189
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1733933Z ^[[32mWritten successfully:^[[0m build/membership/membership.r1cs
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.1747895Z ^[[32mWritten successfully:^[[0m build/membership/membership.sym
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.5537816Z ^[[32mWritten successfully:^[[0m build/membership/membership_js/membership.wasm
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.5715247Z ^[[32mEverything went okay^[[0m
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.5798205Z ok: membership
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.5801212Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.5801745Z === compiling nonRevocation ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.6402075Z ^[[32mtemplate instances^[[0m: 5
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7144032Z non-linear constraints: 2333
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7144340Z linear constraints: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7144479Z public inputs: 3
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7144670Z private inputs: 257 (256 belong to witness)
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7144886Z public outputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7145008Z wires: 2335
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7145119Z labels: 3627
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7145605Z ^[[32mWritten successfully:^[[0m build/nonRevocation/nonRevocation.r1cs
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7150134Z ^[[32mWritten successfully:^[[0m build/nonRevocation/nonRevocation.sym
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7210415Z ^[[32mWritten successfully:^[[0m build/nonRevocation/nonRevocation_js/nonRevocation.wasm
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7210907Z ^[[32mEverything went okay^[[0m
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7225474Z ok: nonRevocation
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7227092Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.7227642Z === compiling attributeEquals ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8150767Z ^[[32mtemplate instances^[[0m: 74
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8631498Z non-linear constraints: 242
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8631902Z linear constraints: 0
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8632114Z public inputs: 2
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8632345Z private inputs: 2
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8632547Z public outputs: 1
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8632742Z wires: 246
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8632967Z labels: 779
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8633669Z ^[[32mWritten successfully:^[[0m build/attributeEquals/attributeEquals.r1cs
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:36.8635142Z ^[[32mWritten successfully:^[[0m build/attributeEquals/attributeEquals.sym
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2104816Z ^[[32mWritten successfully:^[[0m build/attributeEquals/attributeEquals_js/attributeEquals.wasm
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2260690Z ^[[32mEverything went okay^[[0m
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2324205Z ok: attributeEquals
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2326831Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2327262Z Done compiling circuits -> /home/runner/work/campus-cred-wallet/campus-cred-wallet/packages/zk-circuits/build
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2327998Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2328071Z === compiling ageOver ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2331679Z FAILED: ageOver CircomRunner is not defined
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2331883Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2331989Z === compiling membership ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2332730Z FAILED: membership CircomRunner is not defined
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2332930Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2333058Z === compiling nonRevocation ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2336001Z FAILED: nonRevocation CircomRunner is not defined
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2336485Z FAILED: attributeEquals CircomRunner is not defined
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2338367Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2338458Z === compiling attributeEquals ===
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2338564Z 
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2339027Z Done compiling circuits -> /home/runner/work/campus-cred-wallet/campus-cred-wallet/packages/zk-circuits/build
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2401213Z [ELIFECYCLE] Command failed with exit code 1.
+ZK circuits (compile)	Compile circuits	2026-11-18T07:46:37.2424475Z ##[error]Process completed with exit code 1.

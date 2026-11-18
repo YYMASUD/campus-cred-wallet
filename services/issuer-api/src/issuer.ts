@@ -1,4 +1,4 @@
-import { createDidKey, issueSdJwt, hashCredential } from "@campus-cred/sdk";
+import { createDidKey, issueSdJwt, credentialFingerprint } from "@campus-cred/sdk";
 import type { CampusCredentialType, SdJwtVcCredential } from "@campus-cred/types";
 import { pool } from "./db.js";
 
@@ -42,8 +42,11 @@ export async function issueCredential(opts: {
     expiresInSeconds,
   });
 
-  const credentialHash = hashCredential(opts.claims, issuer.did);
-  const statusIndex = Number(await nextStatusIndex());
+  // The revocation key is derived from the SAME bytes the verifier will see:
+  // the issuer JWT. Both sides call credentialFingerprint(), so a revoke issued
+  // here is guaranteed to match the verifier's lookup.
+  const credentialHash = credentialFingerprint(sdJwt);
+  const statusIndex = await allocateStatusIndex();
 
   const credential: SdJwtVcCredential = {
     sdJwt,
@@ -68,10 +71,19 @@ export async function issueCredential(opts: {
   return { credential, offerId };
 }
 
-async function nextStatusIndex(): Promise<number> {
+/**
+ * Allocate the next revocation status index for this issuer.
+ * Mirrors RevocationRegistry.allocateIndex() on-chain: a monotonically
+ * increasing counter. Kept in Postgres here so the service works without a
+ * chain; the index is written on-chain by the deploy/registration flow.
+ */
+async function allocateStatusIndex(): Promise<number> {
   const r = await pool.query(
-    "INSERT INTO revoked(credential_hash, status_index) VALUES($1, (SELECT COALESCE(MAX(status_index)+1,0) FROM revoked)) ON CONFLICT DO NOTHING RETURNING status_index",
-    [`idx_${Date.now()}`]
+    `INSERT INTO status_cursor(issuer_did, next_index)
+     VALUES($1, 1)
+     ON CONFLICT(issuer_did) DO UPDATE SET next_index = status_cursor.next_index + 1
+     RETURNING next_index - 1 AS allocated`,
+    [process.env.ISSUER_DID ?? "did:web:issuer.example.edu"]
   );
-  return r.rows[0]?.status_index ?? Math.floor(Math.random() * 16384);
+  return Number(r.rows[0].allocated);
 }
