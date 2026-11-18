@@ -5,6 +5,10 @@ on:
     branches: [main]
   pull_request:
 
+# pnpm version comes from "packageManager" in the root package.json.
+# Do NOT pass `version:` to pnpm/action-setup — it errors with
+# "Multiple versions of pnpm specified".
+
 jobs:
   contracts:
     name: Contracts (compile + test)
@@ -12,17 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install
-      - name: Compile
+      - run: pnpm install --no-frozen-lockfile
+      - name: Compile contracts
         working-directory: packages/contracts
         run: pnpm exec hardhat compile
-      - name: Test
+      - name: Test contracts
         working-directory: packages/contracts
         run: pnpm exec hardhat test
 
@@ -32,24 +34,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install
+      - run: pnpm install --no-frozen-lockfile
       - name: SDK typecheck
         working-directory: packages/sdk
         run: pnpm exec tsc --noEmit
       - name: SDK tests
         working-directory: packages/sdk
         run: pnpm exec vitest run
-      - name: Services typecheck
-        run: |
-          (cd services/issuer-api && pnpm exec tsc --noEmit)
-          (cd services/verifier-api && pnpm exec tsc --noEmit)
-          (cd services/indexer && pnpm exec tsc --noEmit)
+      - name: Issuer API typecheck
+        working-directory: services/issuer-api
+        run: pnpm exec tsc --noEmit
+      - name: Verifier API typecheck
+        working-directory: services/verifier-api
+        run: pnpm exec tsc --noEmit
+      - name: Indexer typecheck
+        working-directory: services/indexer
+        run: pnpm exec tsc --noEmit
+      - name: Issuer API tests
+        working-directory: services/issuer-api
+        run: pnpm exec vitest run
       - name: E2E demo test (issue -> present -> verify -> revoke)
         working-directory: services/verifier-api
         run: pnpm exec vitest run
@@ -60,18 +67,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install
-      - name: Build wallet, issuer portal, verifier portal
+      - run: pnpm install --no-frozen-lockfile
+      - name: Wallet web
+        working-directory: apps/wallet-web
         run: |
-          (cd apps/wallet-web && pnpm exec tsc --noEmit && pnpm exec vite build)
-          (cd apps/verifier-portal && pnpm exec tsc --noEmit && pnpm exec vite build)
-          (cd apps/issuer-portal && pnpm exec tsc --noEmit && pnpm exec vite build)
+          pnpm exec tsc --noEmit
+          pnpm exec vite build
+      - name: Verifier portal
+        working-directory: apps/verifier-portal
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm exec vite build
+      - name: Issuer portal
+        working-directory: apps/issuer-portal
+        run: |
+          pnpm exec tsc --noEmit
+          pnpm exec vite build
 
   circuits:
     name: ZK circuits (compile)
@@ -79,17 +94,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install
+      - run: pnpm install --no-frozen-lockfile
       - name: Install circom
         run: |
           curl -sL -o circom https://github.com/iden3/circom/releases/download/v2.1.9/circom-linux-amd64
-          chmod +x circom && sudo mv circom /usr/local/bin/
+          chmod +x circom
+          sudo mv circom /usr/local/bin/circom
+          circom --version
       - name: Compile circuits
         working-directory: packages/zk-circuits
         run: pnpm build
