@@ -1,0 +1,4 @@
+
+###### ageOver ######
+
+$ snarkjs groth16 setup C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\build\ageOver\ageOver.r1cs C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersOfTau28_hez_final_12.ptau C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\build\ageOver\ageOver.zkey

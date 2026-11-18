@@ -1,11 +1,20 @@
 {
-    "private":  true,
-    "name":  "@campus-cred/zk-circuits",
-    "version":  "1.0.0",
-    "scripts":  {
-                    "lint":  "echo ok",
-                    "build":  "echo placeholder",
-                    "typecheck":  "echo ok",
-                    "test":  "echo placeholder"
-                }
+  "name": "@campus-cred/zk-circuits",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/compile.mjs",
+    "test": "node --test test/*.test.mjs",
+    "lint": "echo zk-lint-ok",
+    "typecheck": "echo zk-typecheck-ok",
+    "setup": "node scripts/setup.mjs"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "snarkjs": "^0.7.6"
+  },
+  "devDependencies": {
+    "circom2": "^0.2.23"
+  }
 }

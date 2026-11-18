@@ -1,0 +1,34 @@
+downloading ptau (may take a minute) ...
+Invoke-WebRequest : AccessDeniedAccess denied.Anonymous caller does not have storage.objects.get access to the Google 
+Cloud Storage object. Permission 'storage.objects.get' denied on resource 
+'//storage.googleapis.com/projects/_/buckets/zkevm/objects/ptau/powersOfTau28_hez_final_12.ptau' (or it may not exist).
+At line:1 char:1
++ Invoke-WebRequest -Uri 'https://storage.googleapis.com/zkevm/ptau/pow ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebExc 
+   eption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+ptau download failed; generating a LOCAL dev ptau instead.
+⚠  NOT FOR PRODUCTION: a local single-party setup has no ceremony guarantees.
+generating local dev ptau (power 12) — this can take a couple of minutes ...
+
+$ snarkjs powersoftau new bn128 12 C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersoftau_0000.ptau
+[32;22m[INFO]  [39;1msnarkJS[0m: First Contribution Hash:
+		9e63a5f6 2b96538d aaed2372 481920d1
+		a40b9195 9ea38ef9 f5f6a303 3b886516
+		0710d067 c09d0961 5f928ea5 17bcdf49
+		ad75abd2 c8340b40 0e3b18e9 68b4ffef
+
+$ snarkjs powersoftau contribute C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersoftau_0000.ptau C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersoftau_0001.ptau --name=campus-cred-dev -e=dev-only-no-security
+[32;22m[INFO]  [39;1msnarkJS[0m: Contribution Response Hash imported: 
+		a8d53221 68a46979 bbc8fcae d98b7c0d
+		e8bd655f 6dd7725f 0fbc4c06 ef5dbe2e
+		137ae28d a3b79141 c7790950 df942e1e
+		986f1816 0d151950 1228b191 06dfb7da
+[32;22m[INFO]  [39;1msnarkJS[0m: Next Challenge Hash: 
+		e65cd9fb 4c927fd9 1b1e2e80 0a801989
+		bc8c3dd8 f4826e60 92f51d53 b5c342e5
+		85927813 ec466d40 1f20e453 2c511292
+		00b960b5 eafc36c1 2c7bd98c e07e1653
+
+$ snarkjs powersoftau prepare phase2 C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersoftau_0001.ptau C:\Users\Mass\Desktop\campus-cred-wallet\packages\zk-circuits\.ptau\powersOfTau28_hez_final_12.ptau
