@@ -16,7 +16,8 @@ const CIRCOM_URL = `https://github.com/iden3/circom/releases/download/${CIRCOM_V
  *  1. CIRCOM_BIN env var
  *  2. packages/zk-circuits/.tools/circom(.exe)
  *  3. repo-root circom(.exe)
- *  4. download the release binary into .tools (Windows only)
+ *  4. `circom` on PATH (e.g. /usr/local/bin on CI)
+ *  5. download the release binary into .tools (Windows only)
  * The WASM compiler (circom2) is intentionally not used: its WASI sandbox
  * mishandles Windows paths.
  */
@@ -32,6 +33,17 @@ function resolveCircom() {
     if (fs.existsSync(c)) return c;
   }
 
+  // Look on PATH (CI installs circom to /usr/local/bin)
+  const pathDirs = (process.env.PATH ?? "").split(path.delimiter).filter(Boolean);
+  for (const dir of pathDirs) {
+    const candidate = path.join(dir, exeName);
+    try {
+      if (fs.existsSync(candidate)) return candidate;
+    } catch {
+      // ignore unreadable PATH entries
+    }
+  }
+
   if (process.platform === "win32") {
     fs.mkdirSync(TOOLS_DIR, { recursive: true });
     const dest = path.join(TOOLS_DIR, "circom.exe");
@@ -44,7 +56,9 @@ function resolveCircom() {
     return dest;
   }
 
-  throw new Error("circom binary not found. Set CIRCOM_BIN or install circom (https://docs.circom.io).");
+  throw new Error(
+    "circom binary not found. Set CIRCOM_BIN, install circom on PATH (https://docs.circom.io), or add it to .tools/."
+  );
 }
 
 const circom = resolveCircom();
