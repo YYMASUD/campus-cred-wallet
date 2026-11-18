@@ -2,3 +2,14 @@ packages:
   - "apps/*"
   - "packages/*"
   - "services/*"
+
+onlyBuiltDependencies:
+  - esbuild
+  - keccak
+  - secp256k1
+  - bufferutil
+  - utf-8-validate
+  - hardhat
+  - snarkjs
+
+dangerouslyAllowAllBuilds: true
