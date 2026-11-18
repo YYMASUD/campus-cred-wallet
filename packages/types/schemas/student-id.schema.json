@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://campus-cred.dev/schemas/student-id.schema.json",
+  "title": "StudentIdCredential",
+  "type": "object",
+  "required": ["givenName", "familyName", "studentNumber", "program", "enrollmentStatus", "birthDate", "university"],
+  "properties": {
+    "givenName": { "type": "string", "minLength": 1 },
+    "familyName": { "type": "string", "minLength": 1 },
+    "studentNumber": { "type": "string", "minLength": 1 },
+    "program": { "type": "string", "minLength": 1 },
+    "enrollmentStatus": { "type": "string", "enum": ["enrolled", "graduated", "suspended"] },
+    "birthDate": { "type": "string", "format": "date" },
+    "university": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://campus-cred.dev/schemas/event-ticket.schema.json",
+  "title": "EventTicketCredential",
+  "type": "object",
+  "required": ["eventName", "eventId", "ticketId"],
+  "properties": {
+    "eventName": { "type": "string", "minLength": 1 },
+    "eventId": { "type": "string", "minLength": 1 },
+    "ticketId": { "type": "string", "minLength": 1 },
+    "seat": { "type": "string" }
+  },
+  "additionalProperties": false
+}

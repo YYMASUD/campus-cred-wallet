@@ -1,0 +1,47 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# env & secrets - NEVER commit real env files or keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# hardhat / foundry
+cache/
+artifacts/
+typechain-types/
+broadcast/
+coverage/
+coverage.json
+
+# zk circuits
+*.ptau
+*.zkey
+*.r1cs
+*.sym
+circuits/build/
+!circuits/**/*.zkey.example
+
+# editor / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+logs/
+
+# prompt file containing tokens (local only)
+propmt.txt.txt
+prompt.txt
