@@ -1,0 +1,36 @@
+name: Deploy to testnet
+
+# Manual trigger only. Requires repository secrets:
+#   DEPLOYER_PRIVATE_KEY, TESTNET_RPC_URL
+on:
+  workflow_dispatch:
+    inputs:
+      network:
+        description: "Network (amoy | sepolia)"
+        required: true
+        default: amoy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - name: Deploy contracts
+        working-directory: packages/contracts
+        env:
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          TESTNET_RPC_URL: ${{ secrets.TESTNET_RPC_URL }}
+        run: pnpm exec hardhat run scripts/deploy.ts --network ${{ github.event.inputs.network }}
+      - name: Upload deployment addresses
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployments
+          path: packages/contracts/deployments/

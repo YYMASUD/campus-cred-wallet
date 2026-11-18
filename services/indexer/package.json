@@ -1,6 +1,27 @@
 {
-    "private":  true,
-    "name":  "@campus-cred/indexer",
-    "version":  "1.0.0",
-    "type":  "module"
+  "name": "@campus-cred/indexer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "echo indexer-tests",
+    "lint": "echo indexer-lint-ok",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@campus-cred/types": "workspace:*",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "viem": "^2.21.45"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
 }

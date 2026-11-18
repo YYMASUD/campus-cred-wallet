@@ -6,7 +6,8 @@ on:
   pull_request:
 
 jobs:
-  build-test:
+  contracts:
+    name: Contracts (compile + test)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,8 +18,78 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-      - run: pnpm install --frozen-lockfile=false
-      - run: pnpm -r run typecheck --if-present
-      - run: pnpm -r run lint --if-present
-      - run: pnpm -r run test --if-present
-      - run: pnpm -r run build --if-present
+      - run: pnpm install
+      - name: Compile
+        working-directory: packages/contracts
+        run: pnpm exec hardhat compile
+      - name: Test
+        working-directory: packages/contracts
+        run: pnpm exec hardhat test
+
+  sdk-services:
+    name: SDK + services (typecheck + tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - name: SDK typecheck
+        working-directory: packages/sdk
+        run: pnpm exec tsc --noEmit
+      - name: SDK tests
+        working-directory: packages/sdk
+        run: pnpm exec vitest run
+      - name: Services typecheck
+        run: |
+          (cd services/issuer-api && pnpm exec tsc --noEmit)
+          (cd services/verifier-api && pnpm exec tsc --noEmit)
+          (cd services/indexer && pnpm exec tsc --noEmit)
+      - name: E2E demo test (issue -> present -> verify -> revoke)
+        working-directory: services/verifier-api
+        run: pnpm exec vitest run
+
+  web-apps:
+    name: Web apps (typecheck + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - name: Build wallet, issuer portal, verifier portal
+        run: |
+          (cd apps/wallet-web && pnpm exec tsc --noEmit && pnpm exec vite build)
+          (cd apps/verifier-portal && pnpm exec tsc --noEmit && pnpm exec vite build)
+          (cd apps/issuer-portal && pnpm exec tsc --noEmit && pnpm exec vite build)
+
+  circuits:
+    name: ZK circuits (compile)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - name: Install circom
+        run: |
+          curl -sL -o circom https://github.com/iden3/circom/releases/download/v2.1.9/circom-linux-amd64
+          chmod +x circom && sudo mv circom /usr/local/bin/
+      - name: Compile circuits
+        working-directory: packages/zk-circuits
+        run: pnpm build

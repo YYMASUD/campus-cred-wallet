@@ -8,11 +8,16 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev:all": "docker compose -f infra/docker/docker-compose.yml up -d && pnpm -r --parallel run dev",
-    "build": "pnpm -r run build",
-    "test": "pnpm -r run test",
-    "lint": "pnpm -r run lint",
-    "typecheck": "pnpm -r run typecheck",
+    "dev:all": "pnpm dev:infra && pnpm dev:services",
+    "dev:infra": "docker compose -f infra/docker/docker-compose.yml up -d",
+    "dev:services": "pnpm --parallel --filter \"@campus-cred/issuer-api\" --filter \"@campus-cred/verifier-api\" --filter \"@campus-cred/indexer\" --filter \"@campus-cred/wallet-web\" --filter \"@campus-cred/issuer-portal\" --filter \"@campus-cred/verifier-portal\" run dev",
+    "seed": "node infra/scripts/seed.mjs",
+    "zk:build": "pnpm --filter @campus-cred/zk-circuits build",
+    "zk:setup": "pnpm --filter @campus-cred/zk-circuits setup",
+    "contracts:build": "pnpm --filter @campus-cred/contracts build",
+    "contracts:test": "pnpm --filter @campus-cred/contracts test",
+    "test": "pnpm --filter @campus-cred/contracts test && pnpm --filter @campus-cred/sdk test && pnpm --filter @campus-cred/verifier-api test",
+    "build": "pnpm -r --filter=!@campus-cred/zk-circuits run build",
     "clean": "pnpm -r run clean && rm -rf node_modules"
   },
   "devDependencies": {
