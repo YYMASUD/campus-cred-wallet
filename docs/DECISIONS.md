@@ -14,3 +14,6 @@
 | D10 | Exchange protocol | **OpenID4VCI/OpenID4VP-inspired** QR/deep-link flow | Full OID4VCI spec simplified to offer/request + direct_post; documented in API.md. |
 | D11 | Storage | **PostgreSQL + Redis, IPFS (Kubo) for encrypted blobs** | No unencrypted personal data on IPFS. Local Kubo node in docker-compose. |
 | D12 | Key storage (web) | **WebCrypto non-extractable keys + encrypted IndexedDB backup (PBKDF2→AES-GCM)** | Browser has no secure enclave; limitation documented in SECURITY.md. |
+| D13 | Revocation key | **`credentialFingerprint` = keccak256(issuer-JWT)** | Issuer and verifier must derive the same revocation key from the same bytes. Hashing the claims (issuer) vs. the presented SD-JWT (verifier) silently broke revocation — fixed and guarded by `services/verifier-api/test/revocation-key.test.ts`. |
+| D14 | ZK in the verifier | **Load real `.vkey.json` files, reject when absent** | `loadVerificationKey` reads `packages/zk-circuits/build/<id>/<id>.vkey.json` and caches it; an absent key returns `null` → `INVALID`, never silently `VERIFIED`. |
+| D15 | pnpm CI | **No explicit `version:` in `pnpm/action-setup`** | pnpm reads `packageManager: pnpm@12.21.0` from package.json; passing a second version triggers "Multiple versions of pnpm specified" — documented because it cost a CI cycle. |

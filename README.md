@@ -35,10 +35,11 @@ pnpm zk:setup      # groth16 proving/verification keys + solidity verifiers
 |-------|--------|
 | `packages/contracts` | 21 passing |
 | `packages/sdk` | 9 passing |
-| `services/verifier-api` (E2E demo) | 5 passing |
+| `services/verifier-api` | 9 passing (5 demo E2E + 4 revocation regression) |
 | `services/issuer-api` | 5 passing |
 | `packages/zk-circuits` | 3 real Groth16 proofs verified |
 | `apps/*` | typecheck + production build OK |
+| **GitHub Actions (CI)** | all 4 jobs green on ubuntu-latest |
 
 ## Monorepo
 
@@ -48,7 +49,7 @@ pnpm zk:setup      # groth16 proving/verification keys + solidity verifiers
 | `apps/issuer-portal` | University/organizer dashboard — issue + revoke |
 | `apps/verifier-portal` | Verifier request builder, QR, live VERIFIED/INVALID/REVOKED |
 | `packages/types` | Shared types + credential JSON schemas |
-| `packages/sdk` | DID (`did:key`), SD-JWT VC, selective disclosure, key-binding, ZK wrappers, encrypted IPFS |
+| `packages/sdk` | DID (`did:key`), SD-JWT VC, selective disclosure, key-binding, `credentialFingerprint`, ZK wrappers, encrypted IPFS |
 | `packages/contracts` | IssuerRegistry, SchemaRegistry, RevocationRegistry (bitmap), ZKVerifier, soulbound EventTicket |
 | `packages/zk-circuits` | Circom circuits (ageOver, membership, nonRevocation, attributeEquals) + Groth16 artifacts |
 | `packages/ui` | Shared React components (scaffold) |

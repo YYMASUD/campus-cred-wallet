@@ -372,7 +372,21 @@ importers:
         specifier: ^5.6.3
         version: 5.9.3
 
-  packages/ui: {}
+  packages/ui:
+    dependencies:
+      '@campus-cred/types':
+        specifier: workspace:*
+        version: link:../types
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.31
+      typescript:
+        specifier: ^5.6.3
+        version: 5.9.3
 
   packages/zk-circuits:
     dependencies:

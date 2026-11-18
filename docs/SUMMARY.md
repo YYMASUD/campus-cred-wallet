@@ -9,8 +9,8 @@ campus verifiable credentials.
 |-------|----------|-------|
 | **Smart contracts** (`packages/contracts`) | `IssuerRegistry`, `CredentialSchemaRegistry`, `RevocationRegistry` (bitmap status list), `ZKVerifier` (Groth16 router + replay guard), `EventTicket` (ERC-5192 soulbound) | Compiles (solc 0.8.28, cancun) · **21/21 tests pass** |
 | **ZK circuits** (`packages/zk-circuits`) | `ageOver`, `membership`, `nonRevocation`, `attributeEquals` (Circom 2.1.6) | All compile · Groth16 keys + Solidity verifiers generated · **3/3 real proof round-trips pass** |
-| **SDK** (`packages/sdk`) | `did:key` create/resolve, SD-JWT VC issue/verify, selective-disclosure presentation builder, key-binding JWT (nonce+domain), Groth16 wrappers, AES-GCM IPFS helpers | **9/9 tests pass**, fully typed |
-| **Services** (`services/*`) | `issuer-api` (issue/batch/revoke/offer), `verifier-api` (request/submit/status + full verification pipeline), `indexer` (viem event indexer → Postgres) | Typecheck clean · **5/5 E2E + 5/5 issuer tests pass** |
+| **SDK** (`packages/sdk`) | `did:key` create/resolve, SD-JWT VC issue/verify, selective-disclosure presentation builder, key-binding JWT (nonce+domain), `credentialFingerprint` for stable revocation keys, Groth16 wrappers, AES-GCM IPFS helpers | **9/9 tests pass**, fully typed |
+| **Services** (`services/*`) | `issuer-api` (issue/batch/revoke/status + monotonic status cursor), `verifier-api` (request/submit/status + full verification pipeline wired to issuer API and real `.vkey.json` keys), `indexer` (viem event indexer → Postgres) | Typecheck clean · **9/9 verifier + 5/5 issuer tests pass** |
 | **Apps** (`apps/*`) | `wallet-web` (PWA: onboarding, claim, credential cards, consent screen, PIN-encrypted keys), `issuer-portal` (issue/revoke), `verifier-portal` (request presets, QR, live status) | All typecheck and **build** |
 | **Infra** | docker-compose (chain, Postgres, Redis, Kubo IPFS), seed script, CI matrix (4 jobs), manual testnet deploy workflow | Present |
 
@@ -20,14 +20,33 @@ campus verifiable credentials.
 packages/contracts        21 passed  (Hardhat)
 packages/sdk               9 passed  (vitest)
 packages/zk-circuits       3 passed  (node --test, real Groth16 proofs)
-services/verifier-api      5 passed  (vitest, full demo scenario)
+services/verifier-api      9 passed  (vitest — 5 demo + 4 revocation regression)
 services/issuer-api        5 passed  (vitest)
 apps/*                     build OK  (vite + tsc)
+CI on GitHub               all 4 jobs green on ubuntu-latest
 ```
 
 The headline result: `services/verifier-api/test/e2e.test.ts` executes the spec's
 demo scenario (issue → hold → selectively present → verify → replay rejected →
 revoke → `REVOKED`) and asserts that no undisclosed claim leaks.
+
+## Bugs found by re-audit and fixed
+
+1. **Revocation could never fire.** Issuer hashed the raw claims, verifier hashed
+   the presented SD-JWT — different keys, no match. Fixed: both sides use
+   `credentialFingerprint` on the issuer JWT. Covered by `revocation-key.test.ts`.
+2. **Revocation stub always returned `false`.** `isRevoked` was a no-op. Now it
+   queries the issuer status endpoint (Postgres mirror of the on-chain bitmap).
+3. **Verifier ignored ZK proofs.** `vkeyFor` returned `null` so any proof would
+   have been rejected. Now `loadVerificationKey` reads the real generated keys.
+4. **`nextStatusIndex` inserted into the wrong table** and returned a random
+   fallback index. Replaced with a Postgres `status_cursor` sequence.
+5. **Seed script imported a `.ts` file** — broken on a fresh clone. Now uses the
+   workspace package.
+6. **Stale `CircomRunner` code in `compile.mjs`** caused the CI circuits job to
+   fail with a misleading error; rewrote the script and exposed `PATH` lookup.
+7. **CI `version: 9` conflict** with `packageManager: pnpm@12.21.0` — removed
+   the explicit version from `pnpm/action-setup` in both workflows.
 
 ## Privacy & security properties implemented
 

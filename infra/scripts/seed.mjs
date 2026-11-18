@@ -39,7 +39,8 @@ async function main() {
 
   // 2. Create the demo holder
   console.log("[2/3] Creating demo holder (Alice)…");
-  const { createDidKey } = await import(path.join(ROOT, "packages", "sdk", "src", "did.ts"));
+  // @campus-cred/sdk resolves through the workspace when run from repo root.
+  const { createDidKey } = await import("@campus-cred/sdk");
   const alice = createDidKey();
   console.log(`  Alice DID: ${alice.did}`);
 
